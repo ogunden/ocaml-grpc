@@ -22,7 +22,7 @@ let server =
 
 let () =
   let open Lwt.Syntax in
-  let port = 8080 in
+  let port = 8081 in
   let listen_address = Unix.(ADDR_INET (inet_addr_loopback, port)) in
   Lwt.async (fun () ->
       let server =

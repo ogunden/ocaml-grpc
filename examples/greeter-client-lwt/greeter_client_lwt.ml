@@ -30,7 +30,7 @@ let call_server address port req =
 
 let () =
   let open Lwt.Syntax in
-  let port = 8080 in
+  let port = 8081 in
   let address = "localhost" in
   let name = if Array.length Sys.argv > 1 then Sys.argv.(1) else "anonymous" in
   let req = Greeter.Greeter_types.default_hello_request ~name () in

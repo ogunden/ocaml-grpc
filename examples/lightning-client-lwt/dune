@@ -1,0 +1,12 @@
+(executable
+ (name lightning_client_lwt)
+ (libraries
+  base64
+  grpc
+  grpc-lwt
+  ocaml-protoc
+  lwt
+  lwt.unix
+  lightning
+  h2
+  h2-lwt-unix))

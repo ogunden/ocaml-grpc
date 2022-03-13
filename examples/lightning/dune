@@ -1,0 +1,15 @@
+(library
+ (name lightning)
+ (libraries ocaml-protoc))
+
+(rule
+ (targets
+  lightning_pb.ml
+  lightning_pb.mli
+  lightning_pp.ml
+  lightning_pp.mli
+  lightning_types.ml
+  lightning_types.mli)
+ (action
+  (run ocaml-protoc -binary -pp -ml_out ./ lightning.proto))
+ (deps lightning.proto))
