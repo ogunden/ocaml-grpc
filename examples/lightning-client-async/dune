@@ -1,0 +1,18 @@
+(executable
+ (name lightning_client_async)
+ (promote (until-clean))
+ (libraries
+  base64
+  grpc
+  grpc-async
+  ocaml-protoc
+  core_kernel
+  core
+  async_kernel
+  async
+  async_unix
+  lightning
+  h2
+  h2-async)
+ (preprocess
+  (pps ppx_jane)))
