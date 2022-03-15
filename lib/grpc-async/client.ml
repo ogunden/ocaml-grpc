@@ -37,7 +37,7 @@ let call ~service ~rpc ?(scheme = "https") ~handler ~do_request
           Ivar.fill out_ivar (Error (Grpc.Status.v Grpc.Status.Unknown));
           return ())
   in
-  let status_ivar = Ivar.create () in
+  let trailers_status_ivar = Ivar.create () in
   let trailers_handler headers =
     let code =
       match H2.Headers.get headers "grpc-status" with
@@ -52,7 +52,7 @@ let call ~service ~rpc ?(scheme = "https") ~handler ~do_request
     | Some code ->
         let message = H2.Headers.get headers "grpc-message" in
         let status = Grpc.Status.v ?message code in
-        Ivar.fill status_ivar status
+        Ivar.fill trailers_status_ivar status
   in
   let write_body : [ `write ] H2.Body.t =
     do_request ?trailers_handler:(Some trailers_handler) request
@@ -63,10 +63,18 @@ let call ~service ~rpc ?(scheme = "https") ~handler ~do_request
      Ivar.fill handler_res_ivar handler_res;
      return ());
   let%bind out = Ivar.read out_ivar in
-  let%bind status = Ivar.read status_ivar in
+  let%bind trailers_status =
+    (* trailers_status_ivar is not always filled at this point, because
+     * trailers_handler is not always called. Perhaps because there are no
+     * trailers in some cases?  For one example, it happens in lnd when
+     * QueryRoutes returns an empty list.  In this case, we let the call return
+     * with an unknown status. *)
+    if Ivar.is_full trailers_status_ivar then Ivar.read trailers_status_ivar
+    else return (Grpc.Status.v Grpc.Status.Unknown)
+  in
   match out with
   | Error _ as e -> return e
-  | Ok out -> return (Ok (out, status))
+  | Ok out -> return (Ok (out, trailers_status))
 
 module Rpc = struct
   type 'a handler =
