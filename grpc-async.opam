@@ -34,6 +34,6 @@ build: [
 ]
 dev-repo: "git+https://github.com/jeffa5/ocaml-grpc.git"
 pin-depends: [
-  [ "gluten-async" "git+https://github.com/mbacarella/gluten#async-expose-ssl-options" ]
-  [ "h2-async" "git+https://github.com/mbacarella/ocaml-h2#async-expose-ssl-options" ]
+  [ "gluten-async.dev" "git+https://github.com/mbacarella/gluten#async-expose-ssl-options" ]
+  [ "h2-async.dev" "git+https://github.com/mbacarella/ocaml-h2#async-expose-ssl-options" ]
   ]
